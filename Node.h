@@ -1,5 +1,4 @@
 #define MAX_LINE 100
-#define asserted || assert(!printf("Error, asserted here\n"))
 
 const static int CANARY = rand() % (time(0)) + 1;	//	Канарейки
 
@@ -12,12 +11,15 @@ private:
 	Data value;		 //      данные в узле	
 	class Node* left;	 //      левая ветвь
 	class Node* right;	 //      правая ветвь
+	class Node* prev;	 //	 родитель (предыдущий узел)
 public:
 	Node();			 //	конструктор
 	~Node();		 //	деструктор
 
 	
 
+	void scan();				     //	считывание из файла базы акинатора
+	void scan_step(FILE*, class Node*);	     //	шаг считывания узла дерева	
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
 	void add(Data, Data);	 //	добавить ветку, уже существующее значение не добавляется
@@ -135,6 +137,76 @@ void Node::print()
 
 }
 
+
+
+void Node::scan()
+{
+
+	FILE* data = fopen("data", "r");
+
+	assert(data);
+
+	char temp = '\0';	
+
+//	fscanf(data, "%c%c%s",  &temp, &temp,  value); 
+
+	Node::scan_step(data, this);
+
+	Node::Check();
+
+
+	fclose(data);
+
+}
+
+void Node::scan_step(FILE* data, class Node* root)
+{
+	char step = '\0';
+
+	fscanf(data, "%c%c", &step, &step);
+	
+	if(step == '(')
+	{
+		if(left == NULL)
+		{
+			
+			left = (Node*)calloc(1, sizeof(class Node));
+			left -> canary1 = CANARY;
+			left -> canary2 = CANARY;
+			left -> prev = root; 
+			left -> value = (char*)calloc(1, MAX_LINE);
+			(*left).Check();
+
+
+
+			(*left).scan_step(data, left);
+	
+		}
+		else
+		{
+			right = (Node*)calloc(1, sizeof(class Node));
+			right -> canary1 = CANARY;
+			right -> canary2 = CANARY;
+			right -> prev = root;
+			right -> value = (char*)calloc(1, MAX_LINE);
+			(*right).Check();
+			(*right).scan_step(data, right);
+		}
+	}
+	else if(step == ')')
+		(*prev).scan_step(data, prev);
+	else if(step == '$')
+		ungetc(step , data);
+	else
+	{
+		ungetc(step, data);
+		fscanf(data, "%s", value);
+		Node::scan_step(data, root);
+
+	}
+	
+}
+
 void Node::dump()
 {
 	Node::Check();	
@@ -157,15 +229,15 @@ void Node::dump()
 
 void Node::dump_in_file(FILE* dota)
 {
-	fprintf(dota, "\t%s[color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n", value);
+	fprintf(dota, "\t\"%s\"[color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n", value);
 	if(left != NULL)
 	{
-		fprintf(dota, "\t%s -> %s[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, left -> value);
+		fprintf(dota, "\t\"%s\" -> \"%s\"[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, left -> value);
 		(*left).dump_in_file(dota);
 	}
 	if(right != 0)
 	{
-		fprintf(dota, "\t%s -> %s[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, right -> value);
+		fprintf(dota, "\t\"%s\" -> \"%s\"[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, right -> value);
 		(*right).dump_in_file(dota);
 	}
 

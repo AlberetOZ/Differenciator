@@ -4,38 +4,73 @@
 #include <cassert>
 #include <iostream>
 #include "Node.h"
+#include "Differenciator.h"
+#define MAX_INPUT 10000
+
+
+#define asserted || assert(!printf("Error, asserted here\n"))
 
 
 
 int main()
 {
-	int number_input = 0;
-	int step_operand = 0;
-	char data_operand[MAX_LINE] = {0};
-	char data_number[MAX_LINE] = {0};
 
-	Node test;
+	printf("beta version//\nПример ввода:* ( + ( X ) ( * ( 1234 ) ( Y ) ) )\n");
 
-	for(; scanf("%s %s", data_operand + 1, data_number) == 2; number_input++)
+	int input_number = 0;
+
+	char input[MAX_INPUT] = {0};
+
+	for(int i = 0; scanf("%c", &input[i]) == 1; i++)
 	{
-		data_operand[0] = '\"';
-		
-		for(step_operand = 0; step_operand < number_input; step_operand++)
+		if(input[i] == '*')
 		{
+			input[i + input_number] = input[i];
 
-			data_operand[2 + step_operand] = ' ';
-
-
+			for(int j = 0; j < input_number; j++)
+			{
+				input[i+input_number+j] = ' ';
+				input[i+j] = ' ';
+			}
+			input_number++;
+			//////
 		}
-		data_operand[number_input + 2] = '\"'; 
-
-		test.add(data_operand, data_number);
 
 
+		if(i > MAX_INPUT - 10)
+			printf("Завязывай давай, я столько не продифференцирую, не больше 10 символов ещё\n");
+		if(i == MAX_INPUT - 1)
+		{
+			printf("limit of member\n");
+			assert(!"limit");
+		}
 
 	}
 
+	FILE* data = fopen("data", "w");
+	
+	assert(data);
 
+	fprintf(data, " ( ");
+
+	fputs(input, data);
+
+	fprintf(data, " $$$$$$$$$$$$$");
+
+	fclose(data);
+
+	Node test;
+
+//	for(; scanf("%s %s", data_operand + 1, data_number) == 2; number_input++)
+//	{
+
+
+
+//	}
+
+
+
+	test.scan();    //задебажил этоооо
 
 	test.dump();
 
