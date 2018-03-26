@@ -15,7 +15,7 @@
 int main()
 {
 
-	printf("beta version//\nПример ввода:* ( + ( X ) ( * ( 1234 ) ( Y ) ) )\n");
+	printf("beta version//\nПример ввода:* ( + ( X ) ( * ( 1234 ) ( Y ) ) ) ( 228 )\n");
 
 	int input_number = 0;
 
@@ -27,11 +27,12 @@ int main()
 		{
 			input[i + input_number] = input[i];
 
-			for(int j = 0; j < input_number; j++)
+			for(int j = 1; j <= input_number; j++)
 			{
-				input[i+input_number+j] = ' ';
-				input[i+j] = ' ';
+				input[i+input_number+j] = '_';
+				input[i+j-1] = '_';
 			}
+			i += input_number;
 			input_number++;
 			//////
 		}
