@@ -50,7 +50,7 @@ int main()
 	
 	assert(data);
 
-	fprintf(data, " ( ");
+	fprintf(data, " ");
 
 	fputs(input, data);
 
@@ -61,7 +61,7 @@ int main()
 	if(check_scobki(data) == 0)
 	{
 
-		printf("\nТут проблема со скобками, я такое не дифференцирую((((\n");
+		printf("\n!!!!!!!!!!!!!!!!!!!\nТут проблема со скобками, я такое не дифференцирую((((\n!!!!!!!!!!!!!!!!\n");
 		return 1;	
 
 
@@ -80,7 +80,15 @@ int main()
 
 	test.scan();    //задебажил этоооо
 
-	test.dump();
+	FILE * dump_input_file = fopen("input", "w");
+
+	assert(dump_input_file);
+
+	test.dump(dump_input_file);
+
+	fclose(dump_input_file);
+
+	system("dot -Tgif -Oinput.gif input");
 
 	return 0;
 }

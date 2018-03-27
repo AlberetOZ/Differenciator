@@ -18,7 +18,7 @@ public:
 
 	
 
-	void scan();				     //	считывание из файла базы акинатора
+	void scan();				     //	считывание из файла базы дифференциатора
 	void scan_step(FILE*);	 //	шаг считывания узла дерева	
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
@@ -26,7 +26,7 @@ public:
 	void print();		 //	инфексный вывод дерева	
 	void reset();		 //	обнуление(сброс) дерева
 	size_t mass();		 //	колво узлов дерева
-	void dump();		 //	печать дерева через Dot
+	void dump(FILE*);	 //	печать дерева через Dot
 	void dump_in_file(FILE*, int);//	вывод дерева в файл dota2 на языке dot
 	void print_links(FILE*, int);//		распечатка костылей для dota
 private:
@@ -208,11 +208,10 @@ void Node::scan_step(FILE* data)
 	
 }
 
-void Node::dump()
+void Node::dump(FILE* dota)
 {
 	Node::Check();	
 
-	FILE* dota = fopen("dota2", "w");
 	assert(dota);
 	
 	fprintf(dota, "digraph dota_one_love {\nbgcolor=\"white\";\nresolution=720;\n");
@@ -221,10 +220,6 @@ void Node::dump()
 
 
 	fprintf(dota, "\n}\n");
-
-	fclose(dota);
-
-	system("dot -Tgif -Odota.gif dota2");
 
 }
 
