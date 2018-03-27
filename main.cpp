@@ -13,31 +13,23 @@
 int main()
 {
 
-	printf("beta version//\nПример ввода:* ( + ( X ) ( * ( 1234 ) ( Y ) ) ) ( 228 )\n");
-
-//	int input_number = 0;
+	printf("beta version//\nПример ввода:exp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( 98 ) ) ) ( err ) ) ( log ( 231 ) ( z ) ) )\n");
 
 	char input[MAX_INPUT] = {0};
 
 	for(int i = 0; scanf("%c", &input[i]) == 1; i++)
 	{
-//		if(input[i] == '*')
-//		{
-//			input[i + input_number] = input[i];
-//
-//			for(int j = 1; j <= input_number; j++)
-//			{
-//				input[i+input_number+j] = '_';
-//				input[i+j-1] = '_';
-//			}
-//			i += input_number;
-//			input_number++;
-			//////
-//		}
+
+		if(input[i] == '\n')
+		{
+			input[i] = '\0';
+
+			break;
+		}
 
 
-		if(i > MAX_INPUT - 10)
-			printf("Завязывай давай, я столько не продифференцирую, не больше 10 символов ещё\n");
+		if(i > MAX_INPUT - 100)
+			printf("Завязывай давай, я столько не продифференцирую, не больше 100 символов ещё\n");
 		if(i == MAX_INPUT - 1)
 		{
 			printf("limit of member\n");
@@ -45,6 +37,7 @@ int main()
 		}
 
 	}
+
 
 	FILE* data = fopen("data", "w");
 	
@@ -68,15 +61,6 @@ int main()
 	}
 
 	Node test;
-
-//	for(; scanf("%s %s", data_operand + 1, data_number) == 2; number_input++)
-//	{
-
-
-
-//	}
-
-
 
 	test.scan();    //задебажил этоооо
 
