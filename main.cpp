@@ -5,10 +5,8 @@
 #include <iostream>
 #include "Node.h"
 #include "Differenciator.h"
+#include "check_skobki.h"
 #define MAX_INPUT 10000
-
-
-#define asserted || assert(!printf("Error, asserted here\n"))
 
 
 
@@ -17,25 +15,25 @@ int main()
 
 	printf("beta version//\nПример ввода:* ( + ( X ) ( * ( 1234 ) ( Y ) ) ) ( 228 )\n");
 
-	int input_number = 0;
+//	int input_number = 0;
 
 	char input[MAX_INPUT] = {0};
 
 	for(int i = 0; scanf("%c", &input[i]) == 1; i++)
 	{
-		if(input[i] == '*')
-		{
-			input[i + input_number] = input[i];
-
-			for(int j = 1; j <= input_number; j++)
-			{
-				input[i+input_number+j] = '_';
-				input[i+j-1] = '_';
-			}
-			i += input_number;
-			input_number++;
+//		if(input[i] == '*')
+//		{
+//			input[i + input_number] = input[i];
+//
+//			for(int j = 1; j <= input_number; j++)
+//			{
+//				input[i+input_number+j] = '_';
+//				input[i+j-1] = '_';
+//			}
+//			i += input_number;
+//			input_number++;
 			//////
-		}
+//		}
 
 
 		if(i > MAX_INPUT - 10)
@@ -59,6 +57,15 @@ int main()
 	fprintf(data, " $$$$$$$$$$$$$");
 
 	fclose(data);
+
+	if(check_scobki(data) == 0)
+	{
+
+		printf("\nТут проблема со скобками, я такое не дифференцирую((((\n");
+		return 1;	
+
+
+	}
 
 	Node test;
 

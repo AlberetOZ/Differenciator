@@ -5,11 +5,11 @@
 //  Copyright © 2018 Beda Diana. All rights reserved.
 //
 #define N 10000
-typedef int Data;
+typedef int Data_Stack;
 
 struct Stack {
     int n;
-    Data a[N];
+    Data_Stack a[N];
 };
 
 void stack_create(struct Stack * s)
@@ -21,17 +21,17 @@ void stack_create(struct Stack * s)
     s -> n = 0;
 }
 
-void stack_push(struct Stack * s, Data x)
+void stack_push(struct Stack * s, Data_Stack x)
 {
     s -> a[s -> n] = x;
     s -> n++;
 }
-Data stack_pop(struct Stack * s)
+Data_Stack stack_pop(struct Stack * s)
 {
     s -> n--;
     return s -> a[s -> n];
 }
-Data stack_get(struct Stack * s)
+Data_Stack stack_get(struct Stack * s)
 {
     
     return s -> a[s -> n-1];
@@ -67,11 +67,15 @@ void stack_clear(struct Stack * s)
 }
 
 
-int check_skobki(FILE* data)
+int check_scobki(FILE* data)
 {
+//    fclose(data);
+    data = fopen("data", "r");
     char m = 0;
-    struct Stack * s = calloc(sizeof(struct Stack),1);
+    struct Stack * s = (Stack*)calloc(sizeof(struct Stack),1);
     stack_create(s);
+
+    fscanf(data, "%c%c", &m, &m);
     
     for(; fscanf(data, "%c", &m) == 1;)
     {
@@ -83,6 +87,7 @@ int check_skobki(FILE* data)
             if(stack_pop(s) != '(')
             {  
                 free(s);
+		fclose(data);
                 return 0;
             }
         }
@@ -92,6 +97,7 @@ int check_skobki(FILE* data)
             if(stack_pop(s) != '[')
             { 
                 free(s);
+		fclose(data);
                 return 0;
             }
         }
@@ -101,6 +107,7 @@ int check_skobki(FILE* data)
             if(stack_pop(s) != '{')
             {  
                 free(s);
+		fclose(data);
                 return 0;
             }
         }
@@ -110,16 +117,24 @@ int check_skobki(FILE* data)
             if(stack_pop(s) != '<')
             {    
                 free(s);
+		fclose(data);
                 return 0;
             }
         }
 
     }
-    free(s);
+    fclose(data);
     if(s -> n == 0)
+    {
+	free(s);
         return 1;
+    }
     else
+    {
+	free(s);
         return 0;
+
+    }
 }
 
 
