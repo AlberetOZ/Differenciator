@@ -13,7 +13,7 @@
 int main()
 {
 
-	printf("beta version//\nПример ввода:exp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( 98 ) ) ) ( err ) ) ( log ( 231 ) ( z ) ) )\n");
+	printf("beta version//\nПример ввода:\nexp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( 98 ) ) ) ( err ) ) ( log ( 231 ) ( z ) ) )\n\n");
 
 	char input[MAX_INPUT] = {0};
 
@@ -62,7 +62,11 @@ int main()
 
 	Node test;
 
-	test.scan();    //задебажил этоооо
+	data = fopen("data", "r");
+
+	test.scan(data);    //задебажил этоооо
+
+	fclose(data);
 
 	FILE * dump_input_file = fopen("input", "w");
 

@@ -18,7 +18,7 @@ public:
 
 	
 
-	void scan();				     //	считывание из файла базы дифференциатора
+	void scan(FILE*);	 //	считывание из файла базы в дерево
 	void scan_step(FILE*);	 //	шаг считывания узла дерева	
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
@@ -140,23 +140,15 @@ void Node::print()
 
 
 
-void Node::scan()
+void Node::scan(FILE* data)
 {
 
-	FILE* data = fopen("data", "r");
 
 	assert(data);
-
-//	char temp = '\0';	
-
-//	fscanf(data, "%c%c%s",  &temp, &temp,  value); 
 
 	Node::scan_step(data);
 
 	Node::Check();
-
-
-	fclose(data);
 
 }
 
