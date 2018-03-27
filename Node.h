@@ -19,7 +19,7 @@ public:
 	
 
 	void scan();				     //	считывание из файла базы акинатора
-	void scan_step(FILE*, class Node*);	     //	шаг считывания узла дерева	
+	void scan_step(FILE*);	 //	шаг считывания узла дерева	
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
 	void add(Data, Data);	 //	добавить ветку, уже существующее значение не добавляется
@@ -151,7 +151,7 @@ void Node::scan()
 
 //	fscanf(data, "%c%c%s",  &temp, &temp,  value); 
 
-	Node::scan_step(data, this);
+	Node::scan_step(data);
 
 	Node::Check();
 
@@ -160,7 +160,7 @@ void Node::scan()
 
 }
 
-void Node::scan_step(FILE* data, class Node* root)
+void Node::scan_step(FILE* data)
 {
 	char step = '\0';
 
@@ -174,13 +174,13 @@ void Node::scan_step(FILE* data, class Node* root)
 			left = (Node*)calloc(1, sizeof(class Node));
 			left -> canary1 = CANARY;
 			left -> canary2 = CANARY;
-			left -> prev = root; 
+			left -> prev = this; 
 			left -> value = (char*)calloc(1, MAX_LINE);
 			(*left).Check();
 
 
 
-			(*left).scan_step(data, left);
+			(*left).scan_step(data);
 	
 		}
 		else
@@ -188,21 +188,21 @@ void Node::scan_step(FILE* data, class Node* root)
 			right = (Node*)calloc(1, sizeof(class Node));
 			right -> canary1 = CANARY;
 			right -> canary2 = CANARY;
-			right -> prev = root;
+			right -> prev = this;
 			right -> value = (char*)calloc(1, MAX_LINE);
 			(*right).Check();
-			(*right).scan_step(data, right);
+			(*right).scan_step(data);
 		}
 	}
 	else if(step == ')')
-		(*prev).scan_step(data, prev);
+		(*prev).scan_step(data);
 	else if(step == '$')
 		ungetc(step , data);
 	else
 	{
 		ungetc(step, data);
 		fscanf(data, "%s", value);
-		Node::scan_step(data, root);
+		Node::scan_step(data);
 
 	}
 	
