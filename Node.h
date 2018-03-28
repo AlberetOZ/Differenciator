@@ -23,7 +23,7 @@ public:
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
 	void add(Data, Data);	 //	добавить ветку, уже существующее значение не добавляется
-	void print();		 //	инфексный вывод дерева	
+	void print(FILE*);		 //	инфексный вывод дерева	
 	void reset();		 //	обнуление(сброс) дерева
 	size_t mass();		 //	колво узлов дерева
 	void dump(FILE*);	 //	печать дерева через Dot
@@ -126,19 +126,19 @@ void Node::add(Data operand, Data number)
 	Node::Check();
 }
 
-void Node::print()
+void Node::print(FILE* data)
 {
+	fprintf(data, "( ");
+
+	fprintf(data, "%s ", value);
 
 	if(left != NULL)
-		(*left).print();
-
-	printf("%s ", value);
-
+		(*left).print(data);
 
 	if(right != NULL)
-		(*right).print();
+		(*right).print(data);
 
-
+	fprintf(data, ") ");
 }
 
 

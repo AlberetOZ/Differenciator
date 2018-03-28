@@ -143,9 +143,6 @@ int main()
 
 	data = fopen("answer", "r");
 	
-//	fscanf(data, "%c%c", &input[MAX_INPUT-1], &input[MAX_INPUT-1]); 
-
-//	printf("%c \n", input[MAX_INPUT-1]);
 	answer.scan(data);
 
 	fclose(data);

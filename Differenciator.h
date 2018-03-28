@@ -56,7 +56,48 @@ int Node::diff_switch(FILE* data)
 
 		fprintf(data, ") ");
 	}
+	else
+	if(strcmp(value, "-") == 0)
+	{
+		fprintf(data, "( - ");
+		(*left).diff_step(data);
+		(*right).diff_step(data);
 
+		fprintf(data, ") ");
+	}
+	else
+	if(strcmp(value, "sin") == 0)
+	{
+		fprintf(data, "( * ( cos ");
+		(*left).print(data); 
+
+		fprintf(data, ") ");
+
+
+		(*left).diff_step(data);
+
+		fprintf(data, ") ");
+	}
+	else
+	if(strcmp(value, "cos") == 0)
+	{
+		fprintf(data, "( * ( * ( -1 ) ( sin ");
+		(*left).print(data);
+
+		fprintf(data, ") ) ");
+		(*left).diff_step(data);
+		fprintf(data, ") ");
+	}
+	else
+	if(strcmp(value, "ln") == 0)
+	{
+		fprintf(data, "( * ( / ( 1 ) ");
+		(*left).print(data);
+		fprintf(data, ") ");
+		(*left).diff_step(data);
+
+		fprintf(data, ") ");
+	}
 
 
 
