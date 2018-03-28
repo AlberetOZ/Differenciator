@@ -8,14 +8,51 @@
 #include "check_skobki.h"
 #define MAX_INPUT 10000
 
-
-
-int main()
+int print_data(const char* input)
 {
+	FILE* data = fopen("data", "w");
+	
+	assert(data);
 
-	printf("beta version//\nПример ввода:\nexp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( 98 ) ) ) ( err ) ) ( log ( 231 ) ( z ) ) )\n\n");
+	fprintf(data, " ");
 
-	char input[MAX_INPUT] = {0};
+	fputs(input, data);
+
+	fprintf(data, " $$$$$$$$$$$$$");
+
+	fclose(data);
+    
+
+	
+	if(check_scobki(data) == 0)
+	{
+
+		printf("\n!!!!!!!!!!!!!!!!!!!\nТут проблема со скобками, я такое не дифференцирую((((\n!!!!!!!!!!!!!!!!\n");
+		return -1;	
+
+
+	}
+
+
+	return 0;
+}
+
+
+int dump_input(Node* expression)
+{
+	FILE * dump_input_file = fopen("input", "w");
+
+	assert(dump_input_file);
+
+	(*expression).dump(dump_input_file);
+
+	fclose(dump_input_file);
+    
+	return 0;
+}
+
+int scanf_input(char* input)
+{
 
 	for(int i = 0; scanf("%c", &input[i]) == 1; i++)
 	{
@@ -39,42 +76,30 @@ int main()
 	}
 
 
-	FILE* data = fopen("data", "w");
-	
-	assert(data);
+	return 0;    
+}
 
-	fprintf(data, " ");
+int main()
+{
 
-	fputs(input, data);
+	printf("beta version//\nПример ввода:\nexp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( X ) ) ) ( X ) ) ( log ( 2 ) ( X ) ) )\n\n");
 
-	fprintf(data, " $$$$$$$$$$$$$");
+	char input[MAX_INPUT] = {0};
+    
+	assert(!scanf_input(input));
 
-	fclose(data);
+	assert(!print_data(input));
 
-	if(check_scobki(data) == 0)
-	{
+	Node expression;
+    
 
-		printf("\n!!!!!!!!!!!!!!!!!!!\nТут проблема со скобками, я такое не дифференцирую((((\n!!!!!!!!!!!!!!!!\n");
-		return 1;	
+	FILE* data = fopen("data", "r");
 
-
-	}
-
-	Node test;
-
-	data = fopen("data", "r");
-
-	test.scan(data);    //задебажил этоооо
+	expression.scan(data);    //задебажил этоооо
 
 	fclose(data);
 
-	FILE * dump_input_file = fopen("input", "w");
-
-	assert(dump_input_file);
-
-	test.dump(dump_input_file);
-
-	fclose(dump_input_file);
+	assert(!dump_input(&expression));
 
 	system("dot -Tgif -Oinput.gif input");
 
