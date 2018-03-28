@@ -18,7 +18,7 @@ int print_data(const char* input)
 
 	fputs(input, data);
 
-	fprintf(data, " $$$$$$$$$$$$$");
+	fprintf(data, "$$$$$$$$$$$$$");
 
 	fclose(data);
     
@@ -51,6 +51,19 @@ int dump_input(Node* expression)
 	return 0;
 }
 
+int dump_answer(Node* expression)
+{
+	FILE * dump_answer_file = fopen("answer_dump", "w");
+
+	assert(dump_answer_file);
+
+	(*expression).dump(dump_answer_file);
+
+	fclose(dump_answer_file);
+
+	return 0;
+}
+
 int scanf_input(char* input)
 {
 
@@ -69,7 +82,7 @@ int scanf_input(char* input)
 			printf("Завязывай давай, я столько не продифференцирую, не больше 100 символов ещё\n");
 		if(i == MAX_INPUT - 1)
 		{
-			printf("limit of member\n");
+			printf("\nlimit of member\n");
 			assert(!"limit");
 		}
 
@@ -91,7 +104,7 @@ int scanf_input(char* input)
 int main()
 {
 
-	printf("beta version//\nПример ввода:\nexp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( X ) ) ) ( X ) ) ( log ( 2 ) ( X ) ) )\n\n");
+	printf("beta version\nДиффиренцирую только по Х\nПример ввода:\nexp ( * ( + ( * ( + ( X ) ( 123 ) ) ( sin ( X ) ) ) ( X ) ) ( log ( 2 ) ( X ) ) )\n\n");
 
 	char input[MAX_INPUT] = {0};
     
@@ -106,11 +119,41 @@ int main()
 
 	expression.scan(data);    //задебажил этоооо
 
+//	expression.print();
+
 	fclose(data);
 
 	assert(!dump_input(&expression));
 
 	system("dot -Tgif -Oinput.gif input");
+
+//Begin diff
+
+	Node answer;
+
+	data = fopen("answer", "w");
+
+	expression.diff_step(data);
+
+	/////
+
+	fprintf(data, "$$$$$$$$$$$$$");
+
+	fclose(data);
+
+	data = fopen("answer", "r");
+	
+//	fscanf(data, "%c%c", &input[MAX_INPUT-1], &input[MAX_INPUT-1]); 
+
+//	printf("%c \n", input[MAX_INPUT-1]);
+	answer.scan(data);
+
+	fclose(data);
+
+	assert(!dump_answer(&answer));
+
+	system("dot -Tgif -Oanswer.gif answer_dump");
+
 
 	return 0;
 }

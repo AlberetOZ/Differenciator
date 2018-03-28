@@ -29,6 +29,9 @@ public:
 	void dump(FILE*);	 //	печать дерева через Dot
 	void dump_in_file(FILE*, int);//	вывод дерева в файл dota2 на языке dot
 	void print_links(FILE*, int);//		распечатка костылей для dota
+
+	int diff_step(FILE*);	 //	шаг дифференцирования
+	int diff_switch(FILE*);	 //	свич для разных производных
 private:
 	int canary2 = CANARY;
 };
@@ -219,7 +222,7 @@ void Node::print_links(FILE* dota, int dump_number)
 {
 	for(int i = 0; i < dump_number; i++)
 	{
-        	fprintf(dota, "$");
+        	fprintf(dota, " ");
 	}
 }
 
