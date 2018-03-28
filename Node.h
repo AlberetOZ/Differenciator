@@ -219,7 +219,7 @@ void Node::print_links(FILE* dota, int dump_number)
 {
 	for(int i = 0; i < dump_number; i++)
 	{
-        	fprintf(dota, " ");
+        	fprintf(dota, "$");
 	}
 }
 
