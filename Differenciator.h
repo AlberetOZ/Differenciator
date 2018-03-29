@@ -124,6 +124,33 @@ int Node::diff_switch(FILE* data)
 		(*right).print(data);
 		fprintf(data, ") ) ");
 	}
+	else
+	if(strcmp(value, "tg") == 0)
+	{
+
+		fprintf(data, "( * ( / ( 1 ) ( * ( cos ");
+		(*left).print(data);
+		fprintf(data, ") ( cos ");
+		(*left).print(data);
+		fprintf(data, ") ) ) ");
+		(*left).diff_step(data);
+		fprintf(data, ") ");
+
+	}
+	else
+	if(strcmp(value, "ctg") == 0)
+	{
+
+		fprintf(data, "( * ( / ( -1 ) ( * ( sin ");
+		(*left).print(data);
+		fprintf(data, ") ( sin ");
+		(*left).print(data);
+		fprintf(data, ") ) ) ");
+		(*left).diff_step(data);
+		fprintf(data, ") ");
+
+	}
+
 
 
 	else

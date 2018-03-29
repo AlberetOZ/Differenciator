@@ -32,6 +32,8 @@ public:
 
 	int diff_step(FILE*);	 //	шаг дифференцирования
 	int diff_switch(FILE*);	 //	свич для разных производных
+
+	int print_postfix();	 //	принт в stdout выражения в норм виде
 private:
 	int canary2 = CANARY;
 };
@@ -274,6 +276,66 @@ void Node::dump_in_file(FILE* dota, int dump_number)
 
 
 }
+
+int Node::print_postfix()
+{
+
+	if((strcmp(value, "sin") == 0) || (strcmp(value, "cos") == 0) || (strcmp(value, "ln") == 0))
+	{
+		printf("%s( ", value);
+
+		if(left != NULL)
+			(*left).print_postfix();
+
+		printf(") ");
+
+
+	}
+	else
+	if(strcmp(value, "-") == 0 || strcmp(value, "+") == 0)
+	{
+
+		if(left != NULL)
+		{
+//			printf("( ");
+			(*left).print_postfix();
+//			printf(") ");
+		}
+
+		printf("%s ", value);
+
+		if(right != NULL)
+		{
+//			printf("( ");
+			(*right).print_postfix();
+//			printf(") ");
+		}
+	}
+	else
+	{
+
+		if(left != NULL)
+		{
+			printf("( ");
+			(*left).print_postfix();
+			printf(") ");
+		}
+
+		printf("%s ", value);
+
+		if(right != NULL)
+		{
+			printf("( ");
+			(*right).print_postfix();
+			printf(") ");
+		}
+	}
+
+
+	return 0;
+}
+
+
 
 Node::~Node()
 {

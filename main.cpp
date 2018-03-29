@@ -107,6 +107,8 @@ int main()
 	printf("beta version\nДиффиренцирую только по Х\nПример ввода:\n* ( + ( sin ( 13x ) ) ( ln ( 9x ) ) ) ( 5x )\n\n");
 
 	char input[MAX_INPUT] = {0};
+
+	printf("Вводите выражение:\n");
     
 	assert(!scanf_input(input));
 
@@ -151,6 +153,9 @@ int main()
 
 	system("dot -Tgif -Oanswer.gif answer_dump");
 
+	printf("\nТа-даммм, а вот и производная по Х:\n");
+	assert(!answer.print_postfix());
+	printf("\n\n");
 
 	return 0;
 }
