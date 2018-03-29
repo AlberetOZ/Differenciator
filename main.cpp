@@ -104,7 +104,7 @@ int scanf_input(char* input)
 int main()
 {
 
-	printf("beta version\nДиффиренцирую только по Х\nПример ввода:\n* ( + ( sin ( x ) ) ( ln ( x ) ) ) ( 5x )\n\n");
+	printf("beta version\nДиффиренцирую только по Х\nПример ввода:\n* ( + ( sin ( 13x ) ) ( ln ( 9x ) ) ) ( 5x )\n\n");
 
 	char input[MAX_INPUT] = {0};
     

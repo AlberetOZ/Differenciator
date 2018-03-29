@@ -110,7 +110,20 @@ int Node::diff_switch(FILE* data)
 		fprintf(data, ") ) ");
 
 	}
-
+	else
+	if(strcmp(value, "/") == 0)
+	{
+		fprintf(data, "( / ( - ( * ");
+		(*left).diff_step(data);
+		(*right).print(data);
+		fprintf(data, ") ( * ");
+		(*right).diff_step(data);
+		(*left).print(data);
+		fprintf(data, ") ) ( * ");
+		(*right).print(data);
+		(*right).print(data);
+		fprintf(data, ") ) ");
+	}
 
 
 	else
