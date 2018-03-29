@@ -222,7 +222,7 @@ void Node::print_links(FILE* dota, int dump_number)
 {
 	for(int i = 0; i < dump_number; i++)
 	{
-        	fprintf(dota, " ");
+		fprintf(dota, " ");
 	}
 }
 
@@ -237,35 +237,39 @@ void Node::dump_in_file(FILE* dota, int dump_number)
 
 	if(left != NULL)
 	{
+		int step = rand() % (strlen(value)*3) + 1;
+
 		fprintf(dota, "\t\"");
 		print_links(dota, dump_number); 
        		fprintf(dota, "%s", value);
 		print_links(dota, dump_number);
 		fprintf(dota, "\" -> \"");
-		print_links(dota, dump_number + 1);
+		print_links(dota, dump_number + step);
 		fprintf(dota, "%s", left -> value);
-		print_links(dota, dump_number + 1);
+		print_links(dota, dump_number + step);
 		fprintf(dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
 		
 
 
 
-		(*left).dump_in_file(dota, dump_number + 1);
+		(*left).dump_in_file(dota, dump_number + step);
 	}
 	if(right != NULL)
 	{
+		int step = rand() % (strlen(value)*2) + 1;
+
 		fprintf(dota, "\t\"");
         	print_links(dota, dump_number);
         	fprintf(dota, "%s", value);
 		print_links(dota, dump_number);
 		fprintf(dota, "\" -> \"");
-            	print_links(dota, dump_number + 2);
+            	print_links(dota, dump_number + step+1);
             
            	fprintf(dota, "%s", right -> value);
-		print_links(dota, dump_number + 2);
+		print_links(dota, dump_number + step+1);
 		fprintf( dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
             
-		(*right).dump_in_file(dota, dump_number + 2);
+		(*right).dump_in_file(dota, dump_number + step+1);
 	}
 
 
