@@ -18,16 +18,20 @@ public:
 
 	
 
-	void scan();				     //	считывание из файла базы акинатора
-	void scan_step(FILE*, class Node*);	     //	шаг считывания узла дерева	
+	void scan(FILE*);	 //	считывание из файла базы в дерево
+	void scan_step(FILE*);	 //	шаг считывания узла дерева	
 	void Check();		 //	проверка дерева
 	class Node* down_right();//	идёт до нижнего правой ветви, возвращает указатель на неё
 	void add(Data, Data);	 //	добавить ветку, уже существующее значение не добавляется
-	void print();		 //	инфексный вывод дерева	
+	void print(FILE*);		 //	инфексный вывод дерева	
 	void reset();		 //	обнуление(сброс) дерева
 	size_t mass();		 //	колво узлов дерева
-	void dump();		 //	печать дерева через Dot
-	void dump_in_file(FILE*);//	вывод дерева в файл dota2 на языкке dot
+	void dump(FILE*);	 //	печать дерева через Dot
+	void dump_in_file(FILE*, int);//	вывод дерева в файл dota2 на языке dot
+	void print_links(FILE*, int);//		распечатка костылей для dota
+
+	int diff_step(FILE*);	 //	шаг дифференцирования
+	int diff_switch(FILE*);	 //	свич для разных производных
 private:
 	int canary2 = CANARY;
 };
@@ -122,44 +126,36 @@ void Node::add(Data operand, Data number)
 	Node::Check();
 }
 
-void Node::print()
+void Node::print(FILE* data)
 {
+	fprintf(data, "( ");
+
+	fprintf(data, "%s ", value);
 
 	if(left != NULL)
-		(*left).print();
-
-	printf("%s ", value);
-
+		(*left).print(data);
 
 	if(right != NULL)
-		(*right).print();
+		(*right).print(data);
 
-
+	fprintf(data, ") ");
 }
 
 
 
-void Node::scan()
+void Node::scan(FILE* data)
 {
 
-	FILE* data = fopen("data", "r");
 
 	assert(data);
 
-	char temp = '\0';	
-
-//	fscanf(data, "%c%c%s",  &temp, &temp,  value); 
-
-	Node::scan_step(data, this);
+	Node::scan_step(data);
 
 	Node::Check();
 
-
-	fclose(data);
-
 }
 
-void Node::scan_step(FILE* data, class Node* root)
+void Node::scan_step(FILE* data)
 {
 	char step = '\0';
 
@@ -173,13 +169,13 @@ void Node::scan_step(FILE* data, class Node* root)
 			left = (Node*)calloc(1, sizeof(class Node));
 			left -> canary1 = CANARY;
 			left -> canary2 = CANARY;
-			left -> prev = root; 
+			left -> prev = this; 
 			left -> value = (char*)calloc(1, MAX_LINE);
 			(*left).Check();
 
 
 
-			(*left).scan_step(data, left);
+			(*left).scan_step(data);
 	
 		}
 		else
@@ -187,58 +183,93 @@ void Node::scan_step(FILE* data, class Node* root)
 			right = (Node*)calloc(1, sizeof(class Node));
 			right -> canary1 = CANARY;
 			right -> canary2 = CANARY;
-			right -> prev = root;
+			right -> prev = this;
 			right -> value = (char*)calloc(1, MAX_LINE);
 			(*right).Check();
-			(*right).scan_step(data, right);
+			(*right).scan_step(data);
 		}
 	}
 	else if(step == ')')
-		(*prev).scan_step(data, prev);
+		(*prev).scan_step(data);
 	else if(step == '$')
 		ungetc(step , data);
 	else
 	{
 		ungetc(step, data);
 		fscanf(data, "%s", value);
-		Node::scan_step(data, root);
+		Node::scan_step(data);
 
 	}
 	
 }
 
-void Node::dump()
+void Node::dump(FILE* dota)
 {
 	Node::Check();	
 
-	FILE* dota = fopen("dota2", "w");
 	assert(dota);
 	
 	fprintf(dota, "digraph dota_one_love {\nbgcolor=\"white\";\nresolution=720;\n");
 
-	Node::dump_in_file(dota);
+	Node::dump_in_file(dota, 0);
 
 
 	fprintf(dota, "\n}\n");
 
-	fclose(dota);
-
-	system("dot -Tgif -Odota.gif dota2");
-
 }
 
-void Node::dump_in_file(FILE* dota)
+void Node::print_links(FILE* dota, int dump_number)
 {
-	fprintf(dota, "\t\"%s\"[color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n", value);
+	for(int i = 0; i < dump_number; i++)
+	{
+		fprintf(dota, " ");
+	}
+}
+
+void Node::dump_in_file(FILE* dota, int dump_number)
+{
+	fprintf(dota, "\t\"");
+	print_links(dota, dump_number);
+	fprintf(dota, "%s", value);
+	print_links(dota, dump_number);
+	fprintf(dota, "\"[color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n");
+
+
 	if(left != NULL)
 	{
-		fprintf(dota, "\t\"%s\" -> \"%s\"[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, left -> value);
-		(*left).dump_in_file(dota);
+		int step = rand() % (strlen(value)*3) + 1;
+
+		fprintf(dota, "\t\"");
+		print_links(dota, dump_number); 
+       		fprintf(dota, "%s", value);
+		print_links(dota, dump_number);
+		fprintf(dota, "\" -> \"");
+		print_links(dota, dump_number + step);
+		fprintf(dota, "%s", left -> value);
+		print_links(dota, dump_number + step);
+		fprintf(dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
+		
+
+
+
+		(*left).dump_in_file(dota, dump_number + step);
 	}
-	if(right != 0)
+	if(right != NULL)
 	{
-		fprintf(dota, "\t\"%s\" -> \"%s\"[color = \"red\"] [fillcolor = \"blue\"] ;\n", value, right -> value);
-		(*right).dump_in_file(dota);
+		int step = rand() % (strlen(value)*2) + 1;
+
+		fprintf(dota, "\t\"");
+        	print_links(dota, dump_number);
+        	fprintf(dota, "%s", value);
+		print_links(dota, dump_number);
+		fprintf(dota, "\" -> \"");
+            	print_links(dota, dump_number + step+1);
+            
+           	fprintf(dota, "%s", right -> value);
+		print_links(dota, dump_number + step+1);
+		fprintf( dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
+            
+		(*right).dump_in_file(dota, dump_number + step+1);
 	}
 
 
