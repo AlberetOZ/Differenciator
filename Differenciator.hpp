@@ -150,6 +150,16 @@ int Node::diff_switch(FILE* data)
 		fprintf(data, ") ");
 
 	}
+	else
+	if(strcmp(value, "exp") == 0)
+	{
+		fprintf(data, "( * ( exp ");
+		(*left).print(data);
+
+		fprintf(data, ") ");
+		(*left).diff_step(data);
+		fprintf(data, ") ");
+	}
 
 
 

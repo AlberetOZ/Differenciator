@@ -28,12 +28,14 @@ public:
 	size_t mass();		 //	колво узлов дерева
 	void dump(FILE*);	 //	печать дерева через Dot
 	void dump_in_file(FILE*, int);//	вывод дерева в файл dota2 на языке dot
-	void print_links(FILE*, int);//		распечатка костылей для dota
+//	void print_links(FILE*, int);//		распечатка костылей для dota
 
 	int diff_step(FILE*);	 //	шаг дифференцирования
 	int diff_switch(FILE*);	 //	свич для разных производных
 
 	int print_postfix();	 //	принт в stdout выражения в норм виде
+
+	int optimize();		 //	оптимизация выражения
 private:
 	int canary2 = CANARY;
 };
@@ -220,21 +222,25 @@ void Node::dump(FILE* dota)
 
 }
 
-void Node::print_links(FILE* dota, int dump_number)
-{
-	for(int i = 0; i < dump_number; i++)
-	{
-		fprintf(dota, " ");
-	}
-}
+//void Node::print_links(FILE* dota, int dump_number)
+//{
+//	Node::Check();
+//
+//	for(int i = 0; i < dump_number; i++)
+//	{
+//		fprintf(dota, " ");
+//	}
+//}
 
 void Node::dump_in_file(FILE* dota, int dump_number)
 {
+	Node::Check();
+
 	fprintf(dota, "\t\"");
-	print_links(dota, dump_number);
-	fprintf(dota, "%s", value);
-	print_links(dota, dump_number);
-	fprintf(dota, "\"[color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n");
+//	print_links(dota, dump_number);
+	fprintf(dota, "%p", value);
+//	print_links(dota, dump_number);
+	fprintf(dota, "\"[label = \"%s\"][color = \"red\"] [fillcolor = \"red\"][fontcolor = blue] ;\n", value);
 
 
 	if(left != NULL)
@@ -242,13 +248,13 @@ void Node::dump_in_file(FILE* dota, int dump_number)
 		int step = rand() % (strlen(value)*3) + 1;
 
 		fprintf(dota, "\t\"");
-		print_links(dota, dump_number); 
-       		fprintf(dota, "%s", value);
-		print_links(dota, dump_number);
+//		print_links(dota, dump_number); 
+       		fprintf(dota, "%p", value);
+//		print_links(dota, dump_number);
 		fprintf(dota, "\" -> \"");
-		print_links(dota, dump_number + step);
-		fprintf(dota, "%s", left -> value);
-		print_links(dota, dump_number + step);
+//		print_links(dota, dump_number + step);
+		fprintf(dota, "%p", left -> value);
+//		print_links(dota, dump_number + step);
 		fprintf(dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
 		
 
@@ -261,14 +267,14 @@ void Node::dump_in_file(FILE* dota, int dump_number)
 		int step = rand() % (strlen(value)*2) + 1;
 
 		fprintf(dota, "\t\"");
-        	print_links(dota, dump_number);
-        	fprintf(dota, "%s", value);
-		print_links(dota, dump_number);
+  //      	print_links(dota, dump_number);
+        	fprintf(dota, "%p", value);
+//		print_links(dota, dump_number);
 		fprintf(dota, "\" -> \"");
-            	print_links(dota, dump_number + step+1);
+  //          	print_links(dota, dump_number + step+1);
             
-           	fprintf(dota, "%s", right -> value);
-		print_links(dota, dump_number + step+1);
+           	fprintf(dota, "%p", right -> value);
+//		print_links(dota, dump_number + step+1);
 		fprintf( dota, "\"[color = \"red\"] [fillcolor = \"blue\"] ;\n");
             
 		(*right).dump_in_file(dota, dump_number + step+1);
@@ -280,7 +286,9 @@ void Node::dump_in_file(FILE* dota, int dump_number)
 int Node::print_postfix()
 {
 
-	if((strcmp(value, "sin") == 0) || (strcmp(value, "cos") == 0) || (strcmp(value, "ln") == 0))
+	Node::Check();
+
+	if((strcmp(value, "sin") == 0) || (strcmp(value, "cos") == 0) || (strcmp(value, "ln") == 0) || (strcmp(value, "tg") == 0) || (strcmp(value, "ctg") == 0) || (strcmp(value, "exp") == 0))
 	{
 		printf("%s( ", value);
 
@@ -297,18 +305,14 @@ int Node::print_postfix()
 
 		if(left != NULL)
 		{
-//			printf("( ");
 			(*left).print_postfix();
-//			printf(") ");
 		}
 
 		printf("%s ", value);
 
 		if(right != NULL)
 		{
-//			printf("( ");
 			(*right).print_postfix();
-//			printf(") ");
 		}
 	}
 	else
@@ -331,6 +335,58 @@ int Node::print_postfix()
 		}
 	}
 
+
+	return 0;
+}
+
+int Node::optimize()
+{
+	Node::Check();
+
+	if(left != NULL && right != NULL)
+	{
+
+		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0 && (strcmp(right -> value, "0")) == 0)
+		{
+			value[0] = '0';
+			value[1] = '\0';
+			(*left).~Node();
+			left = NULL;
+			(*right).~Node();
+			right = NULL;
+
+		}
+		else
+		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0)
+		{
+			strcpy(value, right -> value);
+			(*left).~Node();
+			left = NULL;
+			(*right).~Node();
+			right = NULL;
+
+		}
+		else
+		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(right -> value, "0")) == 0)
+		{
+			strcpy(value, left -> value);
+			(*left).~Node();
+			left = NULL;
+			(*right).~Node();
+			right = NULL;
+
+		}
+	}
+
+
+
+
+	if(left != NULL)
+		assert(!(*left).optimize());
+
+
+	if(right != NULL)
+		assert(!(*right).optimize());
 
 	return 0;
 }
