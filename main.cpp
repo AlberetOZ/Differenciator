@@ -104,7 +104,7 @@ int scanf_input(char* input)
 int main()
 {
 
-//	int optimize = 0;		пока без оптимизации
+	int optimize = 0;	//	пока без оптимизации
 
 	printf("beta version\nДиффиренцирую только по Х\nПример ввода:\n* ( + ( sin ( 13x ) ) ( ln ( 9x ) ) ) ( 5x )\n\n");
 
@@ -127,14 +127,14 @@ int main()
 
 	fclose(data);
 
-//	printf("\nВведите степень оптимизации:\n");		пока не готово
-//	scanf("%d", &optimize);
-//	printf("\n");
+	printf("\nВведите степень оптимизации:\n");	//	пока не готово
+	scanf("%d", &optimize);
+	printf("\n");
 
-//	for(int i = 0; i < optimize; i++)
-//	{
-//		assert(!expression.optimize());
-//	}
+	for(int i = 0; i < optimize; i++)
+	{
+		assert(!expression.optimize());
+	}
 
 	assert(!dump_input(&expression));
 
@@ -161,10 +161,10 @@ int main()
 	fclose(data);
     
 
-//	for(int i = 0; i < optimize; i++)
-//	{
-//		assert(!answer.optimize());             пока не готово
-//	}
+	for(int i = 0; i < optimize; i++)
+	{
+		assert(!answer.optimize());         //    пока не готово
+	}
 
 
 	assert(!dump_answer(&answer));
