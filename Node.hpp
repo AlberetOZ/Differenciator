@@ -350,6 +350,79 @@ int Node::optimize()
 		long converted_left = strtol(left -> value, &found_left, 10);
 		long converted_right = strtol(right -> value, &found_right, 10);
 
+		if((left -> value)[strlen(left -> value)-1] == 'x' && (right -> value)[strlen(right -> value)-1] == 'x' )
+		{
+			(left -> value)[strlen(left -> value)-1] = '\0';
+			 
+			(right -> value)[strlen(right -> value)-1] = '\0';
+
+			
+			long converted_left = strtol(left -> value, &found_left, 10);
+			long converted_right = strtol(right -> value, &found_right, 10);
+
+			
+			if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "")) == 0 && (strcmp(right -> value, "")) == 0)
+			{
+				value[0] = '0';
+				value[1] = '\0';
+				(*left).~Node();
+				left = NULL;
+				(*right).~Node();
+				right = NULL;
+
+			}
+			else
+			if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "")) == 0)
+			{
+				strcpy(value, right -> value);
+				(*left).~Node();
+				left = NULL;
+				(*right).~Node();
+				right = NULL;
+
+			}
+			else
+			if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(right -> value, "")) == 0)
+			{
+			strcpy(value, left -> value);
+			(*left).~Node();
+			left = NULL;
+			(*right).~Node();
+			right = NULL;
+
+			}
+			else
+			if(strcmp(value, "+") == 0 && (!*found_left) && (!*found_right))
+			{
+				sprintf(value, "%ldx", converted_left+converted_right);
+
+			
+				(*left).~Node();
+				left = NULL;
+				(*right).~Node();
+				right = NULL;
+
+
+			}
+			else
+			if(strcmp(value, "-") == 0 && (!*found_left) && (!*found_right))
+			{
+				sprintf(value, "%ldx", converted_left-converted_right);
+			
+				(*left).~Node();
+				left = NULL;
+				(*right).~Node();
+				right = NULL;
+
+
+			}
+
+
+
+
+		}
+		else
+
 		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0 && (strcmp(right -> value, "0")) == 0)
 		{
 			value[0] = '0';
@@ -397,7 +470,6 @@ int Node::optimize()
 		if(strcmp(value, "-") == 0 && (!*found_left) && (!*found_right))
 		{
 			sprintf(value, "%ld", converted_left-converted_right);
-
 			
 			(*left).~Node();
 			left = NULL;
@@ -414,7 +486,7 @@ int Node::optimize()
 			assert(!(*right).optimize());
 		}
 	}
-	else
+
 
 
 
