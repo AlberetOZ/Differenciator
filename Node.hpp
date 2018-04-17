@@ -407,8 +407,10 @@ int Node::optimize()
 			else
 			if(strcmp(value, "-") == 0 && (!*found_left) && (!*found_right))
 			{
-				sprintf(value, "%ldx", converted_left-converted_right);
-			
+				if( converted_left-converted_right != 0)
+					sprintf(value, "%ldx", converted_left-converted_right);
+				else
+					sprintf(value, "0");		
 				(*left).~Node();
 				left = NULL;
 				(*right).~Node();
@@ -423,7 +425,7 @@ int Node::optimize()
 		}
 		else
 
-		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0 && (strcmp(right -> value, "0")) == 0)
+		if(((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0 && (strcmp(right -> value, "0")) == 0) || ( strcmp(value, "*") == 0 && (strcmp(left -> value, "0") == 0 || strcmp(right -> value, "0") == 0) ) || ( strcmp(value, "/") == 0 && (strcmp(left -> value, "0") == 0) ) )
 		{
 			value[0] = '0';
 			value[1] = '\0';
@@ -436,21 +438,25 @@ int Node::optimize()
 		else
 		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(left -> value, "0")) == 0)
 		{
-			strcpy(value, right -> value);
+//			strcpy(value, right -> value);
 			(*left).~Node();
-			left = NULL;
-			(*right).~Node();
-			right = NULL;
+			free(value);
+			if(prev -> right == this)
+				prev -> right = right;
+			else
+				prev -> left = right;			
 
 		}
 		else
 		if((strcmp(value, "+") == 0 || strcmp(value, "-") == 0) && (strcmp(right -> value, "0")) == 0)
 		{
-			strcpy(value, left -> value);
-			(*left).~Node();
-			left = NULL;
 			(*right).~Node();
-			right = NULL;
+			free(value);
+			if(prev -> right == this)
+				prev -> right = left;
+			else
+				prev -> left = left;	
+
 
 		}
 		else
